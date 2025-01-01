@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import "@radix-ui/themes/styles.css";
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import { Theme } from "@radix-ui/themes";
@@ -16,11 +16,14 @@ import LeavePage from './pages/LeavePage';
 import TaskPage from './pages/TaskPage';
 import NotFound from './pages/NotFound';
 import TaskForm from './pages/TaskForm';
+import { Provider } from './context/Provider';
 
 function App() {
 
+
   return (
     <main>
+      <Provider>
       <Theme accentColor='cyan'  appearance='dark'>
       <Router>
         <Routes>
@@ -43,6 +46,7 @@ function App() {
         </Routes>
       </Router>
           </Theme>
+          </Provider>
     </main>
   )
 }

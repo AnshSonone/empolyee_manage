@@ -180,6 +180,8 @@ class LoginView( APIView ):
                     }, status=status.HTTP_200_OK)
         return Response({"message": "user not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
+# ========== Website functional views =============
+
 class getUserView( APIView ):
 
     def get(self, request):
@@ -201,7 +203,8 @@ class LeaveView( APIView ):
     def post(self, request):
         serializer = serializers.LeaveSerializer(data=request.data)
         if serializer.is_valid():
-            return Response({"message": "Leave applied succesfully"}, status=status.HTTP_200_OK)
+            serializer.save()
+            return Response({"message": "Leave applied succesfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request):
@@ -216,18 +219,15 @@ class LeaveView( APIView ):
             serializer.save()
             return Response({'message': 'leave status updated successfully'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-            
+             
     
-    def delete(self, request):
-        try:
-            user = request.user
-            user_obj = User.objects.get(id=user.id)
-            user_obj.delete()
-            Response({"message": "Leave deleted successfully"}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"message": e.add_note('deletion error occured')}, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id):
+        leave_obj = get_object_or_404(models.LeaveModel ,id=id)
+        if leave_obj:
+            leave_delete = leave_obj.delete()
+            if leave_delete:
+                return Response({"message": "Leave deleted successfully"}, status=status.HTTP_200_OK)
+            return Response({"message": 'Leave was not deleted'}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView( APIView ):
 
@@ -320,6 +320,9 @@ class TaskView( APIView ):
 
         # Optional admin-only check
         if not user.is_superuser:
+            return Response({'message': 'Only admins can update tasks'}, status=status.HTTP_403_FORBIDDEN)
+        
+        if user.id != User.objects.get(id=user.id):
             return Response({'message': 'Only admins can update tasks'}, status=status.HTTP_403_FORBIDDEN)
 
         # Retrieve the task or return 404

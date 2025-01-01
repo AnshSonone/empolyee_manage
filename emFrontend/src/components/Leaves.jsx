@@ -1,14 +1,39 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import Cookies from "js-cookie"
 import axios from "axios";
-import { Box, Flex, Card, Text, Button, Avatar } from "@radix-ui/themes";
+import { Box, Flex, Card, Text, Button } from "@radix-ui/themes";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export default function Leaves(props) {
 
+  const navigate = useNavigate()
 
-  const dateFormat = (date) => {
-    return new Date().toLocaleDateString('en-IN', date)
+  console.log(props)
+
+  
+  const handleCancelLeave = async () => {
+    const token = Cookies.get('accessToken')
+    try{
+      const res = await axios.delete(
+        `http://localhost:8000/api/users/leaves/${props.data.id}/`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      if(res.data ==200){
+        navigate('/leaves')
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  const dateToString = (date) => {
+    return new Date(date).toDateString()
   }
 
     return (
@@ -26,10 +51,13 @@ export default function Leaves(props) {
         Reason: {props.data.leave_reason}
 				</Text>
         <Text as="div" weight='bold'>
-          Leave Start: {dateFormat(props.data.start_leave_date)}
+          Leave Applied: {dateToString(props.data.applied_leave_date)}
         </Text>
         <Text as="div" weight='bold'>
-          {props.data.end_leave_date != '' ? '' : `Leave end: ${dateFormat(props.data.end_leave_date)}`}
+          Leave Start: {dateToString(props.data.start_leave_date)}
+        </Text>
+        <Text as="div" weight='bold'>
+          Leave End: {dateToString(props.data.end_leave_date)}
         </Text>
         <Text as="div" weight='bold'>
         status: {props.data.Leave_status === true ? 'Approved' : 'Pending'}
@@ -39,7 +67,7 @@ export default function Leaves(props) {
     {
       props.data.user == jwtDecode(Cookies.get('accessToken')).user_id &&
     <div className='space-x-2 ml-2 flex justify-center my-2 '>
-        <Button variant='surface' className="cursor-pointer"  >Cancel Leave</Button>
+        <Button variant='surface' className="cursor-pointer" onClick={handleCancelLeave}  >Cancel Leave</Button>
         </div>
     }
     {
@@ -51,30 +79,3 @@ export default function Leaves(props) {
         </div>
     )
 }
-
-/*
-
-{
-        leaveData.map((items, index) => (
-          <div key={items.id}>
-            <div className="leaves_container">
-              <h3>{items.username}</h3>
-          <div className="leaves_div">
-            <p className="leaves_para">{items.leave_reason}</p>
-          </div>
-          <div className="leaves_div">
-            <p className="leaves_para">Applied date: {dateString(items.applied_leave_date)}</p>
-          </div>
-        </div>
-          <div className="leave_start_date_div">
-            <h4 className="leaves_start">need leave date: {items.start_leave_date}</h4>
-          </div>
-          <div className="leave_end_date_div">
-            <h4 className="leaves_end">leave end date: {items.end_leave_date !='' ? items.end_leave_date : items.start_leave_date}</h4>
-          </div>
-          <p className="blog-post__text">leave status: {items.Leave_status === true ? 'Approved' : 'Pending'}</p>
-          </div>
-        ))
-      } 
-
-*/

@@ -58,8 +58,8 @@ class LeaveSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LeaveModel
         fields = '__all__'
-
-
+        
+        
     # def validate(self, attrs):
     #     leave = attrs.get('leave_status')
     #     if leave:
@@ -77,4 +77,4 @@ class TaskSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = models.TaskModel
-        fields = ['user', 'assigned_task', 'issued_date', 'deadline_date',  'is_completed']
+        fields = ['id', 'user', 'assigned_task', 'issued_date', 'deadline_date',  'is_completed']

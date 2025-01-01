@@ -52,32 +52,16 @@ export default function Profile(props) {
 				<span className='font-bold'>Phone</span> {props && props.data?.phone_no}
 				</Text>
                 <Text as="div" size="5" color="gray">
-					<span className='font-bold'>DOB</span> {props && props.data?.date_of_birth}
+					<span className='font-bold'>DOB</span> {props && new Date(props.data?.date_of_birth).toDateString()}
 				</Text>
 			</Box>
 		</Flex>
 	</Card>
 </Box>
 <div className='space-x-2 flex justify-center items-center my-2'>
-        <Button variant='surface' >Edit Profile</Button>
         <Button variant='surface' onClick={handleLogout} >Logout</Button>
         </div>
     </div>
         
   )
 }
-
-/*
-
-<div className="info_container">
-        <img src="" alt="profile photo" />
-        <h2>{props.data && `${props.data?.username[0]?.toUpperCase()}${data[0]?.username?.slice(1, )}`}</h2>
-        <h3>{props.data && `${props.data?.user_role[0]?.toUpperCase()}${data[0]?.user_role?.slice(1, )}`}</h3>
-        <h4>{props.data && props.data?.email}</h4>
-        <h4>{props.data && props.data?.phone_no}</h4>
-        <div className="button_container">
-        </div>
-        <button>Edit Profile</button>
-        <button onClick={handleLogout}>LOGOUT</button>
-        </div>
-*/

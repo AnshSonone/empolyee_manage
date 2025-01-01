@@ -11,7 +11,8 @@ export default function ProtectedRoute() {
 
     useEffect(() => {
         auth().catch(() => setIsAuthenticated(false))
-    }, [])
+        refreshToken().catch(() => setIsAuthenticated(false))
+    }, [isAuthenticated])
 
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem('refreshToken')

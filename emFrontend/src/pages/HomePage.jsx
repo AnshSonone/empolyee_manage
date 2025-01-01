@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +6,7 @@ import Task from "../components/Task.jsx";
 import Leaves from "../components/Leaves.jsx";
 import Profile from "../components/Profile.jsx";
 import { Button } from "@radix-ui/themes";
+import {context} from "../context/Provider.jsx";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function Home() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { handleData } = useContext(context)
 
   useEffect(() => {
     // Define the async function inside useEffect
@@ -31,6 +33,7 @@ export default function Home() {
         if (res.status == 200) {
           // Set the user data to state
           setData(res.data);
+          handleData(res.data)
         }
       } catch (err) {
         setError("Failed to fetch user data.");
@@ -116,7 +119,7 @@ export default function Home() {
           <div className="mt-4 flex flex-col items-center">
             <h2 className="text-2xl sm:text-4xl font-bold ">PROFILE</h2>
             {data.map((items) => (
-              <div key={items.id} className="w-full">
+              <div key={items.id} className="w-full my-2">
                 <Profile data={items} />
               </div>
             ))}
@@ -127,7 +130,7 @@ export default function Home() {
             </h2>
             {taskData.map((items) => (
               <div key={items.id} className="w-full ">
-                <Task data={items} />
+                <Task data={items}/>
               </div>
             ))}
             <Link to={"/tasks"}>
@@ -142,9 +145,11 @@ export default function Home() {
                   <Leaves data={items} />
                 </div>
               ))}
-              <Link to={"/leaves"}>
+              {
+                leaveData != [] ? '' : <Link to={"/leaves"}>
                 <Button variant="surface">Veiw all</Button>
               </Link>
+              }
             </div>
           </div>
         </div>

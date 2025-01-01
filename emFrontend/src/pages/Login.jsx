@@ -145,6 +145,7 @@ export default function Login() {
               type="submit"
               loading={isSubmitting}
               disabled={isSubmitting}
+              size='3'
             >
               {isSubmitting ? 'Signing ..' : 'signin'}
             </Button>

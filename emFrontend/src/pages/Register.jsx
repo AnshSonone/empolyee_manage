@@ -9,6 +9,7 @@ import * as Label from "@radix-ui/react-label";
 import { Button } from "@radix-ui/themes";
 
 export default function Register() {
+
   const FormSchema = z.object({
     username: z.string().min(1, "Username is required"),
     email: z.string().email("Email is required"),
@@ -174,6 +175,7 @@ export default function Register() {
               type="submit"
               loading={isSubmitting}
               disabled={isSubmitting}
+              size='3'
             >
               {isSubmitting ? 'Signuping ..' : 'signup'}
             </Button>

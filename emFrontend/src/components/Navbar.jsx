@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link } from 'react-router-dom'
+import { context } from '../context/Provider.jsx'
 
 export default function Navbar() {
-  
+  const {user} = useContext(context)
   return (
 <div className="relative group">
   {/* Menu Label */}
@@ -23,9 +24,11 @@ export default function Navbar() {
       <li>
         <Link to="/tasks" className="text-white hover:text-azure transition">View Tasks</Link>
       </li>
-      <li>
+      {
+        user.is_admin == true ? <li>
         <Link to="/tasks_form" className="text-white hover:text-azure transition">Send Tasks</Link>
-      </li>
+      </li> : ''
+      }
     </ul>
   </div>
 </div>

@@ -23,6 +23,7 @@ urlpatterns = [
 
     # leaves URLS
     path("users/leaves/", views.LeaveView.as_view(), name='LeaveView'),
+    path("users/leaves/<int:id>/", views.LeaveView.as_view(), name='LeaveView'),
     path('leave/', views.SuperUserLeaveView.as_view(), name="SuperView"),
     
     # Task URLS

@@ -16,8 +16,8 @@ export default function LeavesForm() {
 
     const FormSchema = z.object({
         leave_reason: z.string().min(1, 'Leave reason is required'),
-        start_leave_date: z.coerce.date().refine((date) => date > Date.now(), 'Enter date of future'),
-        end_leave_date: z.coerce.date().refine((date) => date > Date.now(), 'Enter date of future')
+        start_leave_date: z.coerce.date().refine((date) => date > Date.now(), 'Enter future date'),
+        end_leave_date: z.coerce.date().refine((date) => date > Date.now(), 'Enter future date')
     })
 
     const { register , handleSubmit, setError, formState: {errors, isSubmitting}} = useForm({
@@ -45,13 +45,12 @@ export default function LeavesForm() {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken,
                         Authorization: `Bearer ${token}`
                 }
             }
         )
 
-        if(res.status == 200){
+        if(res.status == 201){
             navigate('/')
         }
         } catch (error) {
@@ -68,12 +67,14 @@ export default function LeavesForm() {
 				<Form.Label className="text-[15px] font-medium leading-[35px] text-white">
 					Leave reason
 				</Form.Label>
-				<Form.Message
-					className="text-[13px] text-white opacity-80"
+				{
+                    errors.leave_reason && <span
+					className="text-[13px] text-red-500 font-semibold opacity-80"
 					match="valueMissing"
 				>
-					Please enter a reason
-				</Form.Message>
+                    {errors.leave_reason.message}
+				</span>
+                }
 			</div>
 			<Form.Control asChild>
 				<textarea
@@ -88,12 +89,12 @@ export default function LeavesForm() {
 					Leave start date
 				</Form.Label>
 				{
-                    errors.start_leave_date && <Form.Message
-					className="text-[13px] text-white opacity-80"
+                    errors.start_leave_date && <span
+					className="text-[13px] text-red-500 font-semibold opacity-80"
 					match="valueMissing"
 				>
                     {errors.start_leave_date.message}
-				</Form.Message>
+				</span>
                 }
 			</div>
 			<Form.Control asChild>
@@ -110,12 +111,12 @@ export default function LeavesForm() {
 					Leave end date
 				</Form.Label>
                 {
-                    errors.end_leave_date && <Form.Message
-					className="text-[13px] text-white opacity-80"
+                    errors.end_leave_date && <span
+					className="text-[13px] text-red-500 font-semibold opacity-80"
 					match="valueMissing"
 				>
                     {errors.end_leave_date.message}
-				</Form.Message>
+				</span>
                 }
 			</div>
 			<Form.Control asChild>
